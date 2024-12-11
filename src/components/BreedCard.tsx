@@ -6,8 +6,10 @@ export interface Breed {
   id: string;
   name: string;
   species: string;
+  subCategory: string;
   traits: string[];
   imageUrl: string;
+  popularity?: number;
 }
 
 interface BreedCardProps {
