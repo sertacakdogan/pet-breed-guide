@@ -17,13 +17,13 @@ export const Header = () => {
             <Link to="/" className="text-textDark hover:text-primary transition-colors">
               Home
             </Link>
-            <Link to="/breeds/dogs" className="text-textDark hover:text-primary transition-colors">
+            <Link to="/breed-guide/dogs" className="text-textDark hover:text-primary transition-colors">
               Dogs
             </Link>
-            <Link to="/breeds/cats" className="text-textDark hover:text-primary transition-colors">
+            <Link to="/breed-guide/cats" className="text-textDark hover:text-primary transition-colors">
               Cats
             </Link>
-            <Link to="/breeds/birds" className="text-textDark hover:text-primary transition-colors">
+            <Link to="/breed-guide/birds" className="text-textDark hover:text-primary transition-colors">
               Birds
             </Link>
           </nav>
