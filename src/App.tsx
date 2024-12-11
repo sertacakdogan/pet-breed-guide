@@ -15,6 +15,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/breeds/:species/:breedId" element={<div>Breed Detail Page (To be implemented)</div>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
