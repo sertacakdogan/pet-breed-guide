@@ -1,12 +1,24 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React from 'react';
+import { Breadcrumb } from '@/components/Breadcrumb';
+import { CategoryGrid } from '@/components/CategoryGrid';
+import { Header } from '@/components/Header';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <Breadcrumb 
+          items={[{ label: 'Home', href: '/' }]} 
+        />
+        <h1 className="text-4xl font-bold text-textDark mb-8 mt-4">
+          Pet Breed Guide
+        </h1>
+        <p className="text-lg text-gray-600 mb-12">
+          Discover comprehensive information about different pet breeds across various species.
+        </p>
+        <CategoryGrid />
+      </main>
     </div>
   );
 };
