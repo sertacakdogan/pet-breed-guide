@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Dog, Cat, Bird, Fish, Rabbit, 
-  Lion, Horse, Snake, Bug 
+  Paw, Farm, Turtle, Bug 
 } from 'lucide-react';
 
 const categories = [
@@ -11,9 +11,9 @@ const categories = [
   { name: 'Birds', icon: Bird, href: '/breeds/birds' },
   { name: 'Aquatic Pets', icon: Fish, href: '/breeds/aquatic' },
   { name: 'Small Mammals', icon: Rabbit, href: '/breeds/small-mammals' },
-  { name: 'Exotic Mammals', icon: Lion, href: '/breeds/exotic' },
-  { name: 'Farm Animals', icon: Horse, href: '/breeds/farm' },
-  { name: 'Reptiles & Amphibians', icon: Snake, href: '/breeds/reptiles' },
+  { name: 'Exotic Mammals', icon: Paw, href: '/breeds/exotic' },
+  { name: 'Farm Animals', icon: Farm, href: '/breeds/farm' },
+  { name: 'Reptiles & Amphibians', icon: Turtle, href: '/breeds/reptiles' },
   { name: 'Insects', icon: Bug, href: '/breeds/insects' },
 ];
 
