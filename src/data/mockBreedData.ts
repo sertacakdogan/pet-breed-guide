@@ -24,6 +24,10 @@ export const mockBreedData = {
       wordCount: 20,
       estimatedReadingTime: "8 min"
     },
+    featuredMedia: {
+      url: "https://example.com/golden-retriever-hero.jpg",
+      alt: "Golden Retriever in a field"
+    },
     sections: [
       {
         id: "characteristics",
