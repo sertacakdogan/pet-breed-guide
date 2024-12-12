@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { FeaturedMedia } from './FeaturedMedia';
 
 interface ContentBlock {
   blockId: string;
@@ -12,6 +13,10 @@ interface ContentBlock {
   text?: string;
   url?: string;
   isExternal?: boolean;
+  media?: {
+    url: string;
+    alt: string;
+  };
 }
 
 interface Section {
@@ -26,7 +31,15 @@ interface Section {
     wordCount: number;
   };
   contentBlocks: ContentBlock[];
+  media?: {
+    url: string;
+    alt: string;
+  };
 }
+
+const renderRichText = (text: string) => {
+  return <div dangerouslySetInnerHTML={{ __html: text }} />;
+};
 
 export const BreedContent = ({ sections }: { sections: Section[] }) => {
   const renderContentBlock = (block: ContentBlock) => {
@@ -36,7 +49,6 @@ export const BreedContent = ({ sections }: { sections: Section[] }) => {
           <div key={block.blockId} className="space-y-6">
             {block.elements?.map((element, index) => {
               if (element.type === 'table' && element.data) {
-                // Parse table data and render
                 return (
                   <Table key={index}>
                     <TableHeader>
@@ -46,10 +58,9 @@ export const BreedContent = ({ sections }: { sections: Section[] }) => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {/* Replace with actual table data parsing */}
                       <TableRow>
                         <TableCell>Example</TableCell>
-                        <TableCell>{element.data}</TableCell>
+                        <TableCell>{renderRichText(element.data)}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -57,7 +68,7 @@ export const BreedContent = ({ sections }: { sections: Section[] }) => {
               }
               return (
                 <p key={index} className="text-muted-foreground">
-                  {element.text}
+                  {renderRichText(element.text || '')}
                 </p>
               );
             })}
@@ -72,13 +83,13 @@ export const BreedContent = ({ sections }: { sections: Section[] }) => {
             rel={block.isExternal ? "noopener noreferrer" : undefined}
             className="text-primary hover:underline"
           >
-            {block.text}
+            {renderRichText(block.text || '')}
           </a>
         );
       default:
         return (
           <p key={block.blockId} className="text-muted-foreground">
-            {block.text}
+            {renderRichText(block.text || '')}
           </p>
         );
     }
@@ -93,11 +104,14 @@ export const BreedContent = ({ sections }: { sections: Section[] }) => {
             {section.title.text}
           </h2>
           <p className="text-lg text-muted-foreground">
-            {section.introduction.text}
+            {renderRichText(section.introduction.text)}
           </p>
           <div className="space-y-6">
             {section.contentBlocks.map(renderContentBlock)}
           </div>
+          {section.media && (
+            <FeaturedMedia url={section.media.url} alt={section.media.alt} />
+          )}
         </section>
       ))}
     </div>

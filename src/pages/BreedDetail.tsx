@@ -5,6 +5,7 @@ import { BreedContent } from '@/components/breed/BreedContent';
 import { BreedFAQ } from '@/components/breed/BreedFAQ';
 import { BreedResources } from '@/components/breed/BreedResources';
 import { BreedCallToAction } from '@/components/breed/BreedCallToAction';
+import { FeaturedMedia } from '@/components/breed/FeaturedMedia';
 
 // Temporary mock data - replace with actual data fetching
 import { mockBreedData } from '@/data/mockBreedData';
@@ -38,6 +39,13 @@ const BreedDetail = () => {
               {data.content.description.text}
             </p>
           </header>
+
+          {data.content.featuredMedia && (
+            <FeaturedMedia 
+              url={data.content.featuredMedia.url} 
+              alt={data.content.featuredMedia.alt} 
+            />
+          )}
 
           <BreedContent sections={data.content.sections} />
           
