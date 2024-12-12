@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export type Species = 'dogs' | 'cats' | 'birds' | 'fish' | 'small-mammals' | 'insects' | 'exotic' | 'farm' | 'reptiles';
@@ -52,28 +51,26 @@ export const SpeciesFilter = ({
       </div>
       
       {selectedSpecies && availableSubCategories.length > 0 && (
-        <ScrollArea className="h-[300px] w-[200px] rounded-md border p-4">
-          <div className="space-y-4">
-            <h4 className="font-medium leading-none">Sub Categories</h4>
-            <div className="space-y-2">
-              {availableSubCategories.map((subCategory) => (
-                <div key={subCategory.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={subCategory.id}
-                    checked={selectedSubCategories.includes(subCategory.id)}
-                    onCheckedChange={() => onSubCategoryChange(subCategory.id)}
-                  />
-                  <label
-                    htmlFor={subCategory.id}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {subCategory.label}
-                  </label>
-                </div>
-              ))}
-            </div>
+        <div className="space-y-4">
+          <h4 className="font-medium leading-none">Sub Categories</h4>
+          <div className="space-y-2">
+            {availableSubCategories.map((subCategory) => (
+              <div key={subCategory.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={subCategory.id}
+                  checked={selectedSubCategories.includes(subCategory.id)}
+                  onCheckedChange={() => onSubCategoryChange(subCategory.id)}
+                />
+                <label
+                  htmlFor={subCategory.id}
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {subCategory.label}
+                </label>
+              </div>
+            ))}
           </div>
-        </ScrollArea>
+        </div>
       )}
     </div>
   );
