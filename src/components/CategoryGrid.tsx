@@ -133,7 +133,7 @@ export const CategoryGrid = () => {
         <aside>
           {species && getSubCategories().length > 0 && (
             <div className="space-y-4">
-              <h4 className="font-medium">Filter by Category</h4>
+              <h4 className="font-medium">Sub Categories</h4>
               {getSubCategories().map((subCategory) => (
                 <div key={subCategory.id} className="flex items-center space-x-2">
                   <input
