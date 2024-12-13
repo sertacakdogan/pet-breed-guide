@@ -23,13 +23,13 @@ export const Breadcrumb = ({ items }: BreadcrumbProps) => {
             Pet Breed Guides
           </Link>
         </li>
-        {items.map((item, index) => (
+        {items.slice(1).map((item, index) => (
           <li key={item.href} className="inline-flex items-center">
             <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />
             <Link
               to={item.href}
               className={`inline-flex items-center text-sm font-medium ${
-                index === items.length - 1
+                index === items.length - 2
                   ? 'text-primary'
                   : 'text-gray-600 hover:text-primary'
               }`}

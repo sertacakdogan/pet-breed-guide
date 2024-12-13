@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { type Species } from './SpeciesFilter';
@@ -7,11 +7,6 @@ import { CategoryFilters } from './category/CategoryFilters';
 import { CategorySort, type SortOption } from './category/CategorySort';
 import { CategoryPagination } from './category/CategoryPagination';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
-import { SeoContent } from './SeoContent';
-import { Helmet } from 'react-helmet';
-import petBreedGuidesData from '@/data/pet-breed-guides.json';
 import { dogBreeds, dogSubCategories } from '@/data/species/dogs';
 import { catBreeds, catSubCategories } from '@/data/species/cats';
 import { birdBreeds, birdSubCategories } from '@/data/species/birds';
@@ -23,17 +18,14 @@ import { reptileBreeds, reptileSubCategories } from '@/data/species/reptiles';
 import { insectBreeds, insectSubCategories } from '@/data/species/insects';
 
 const ITEMS_PER_PAGE = 10;
-const MOBILE_ITEMS_PER_LOAD = 10;
 
 export const CategoryGrid = () => {
   const navigate = useNavigate();
   const { species, page = "1" } = useParams();
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>('default');
-  const [displayedItems, setDisplayedItems] = useState(MOBILE_ITEMS_PER_LOAD);
   const currentPage = parseInt(page, 10) || 1;
   const isMobile = useIsMobile();
-  const loadMoreRef = useRef(null);
 
   const handleSpeciesSelect = (selectedSpecies: Species) => {
     setSelectedSubCategories([]);
@@ -95,8 +87,8 @@ export const CategoryGrid = () => {
 
   const totalPages = Math.ceil(sortedBreeds.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = isMobile ? displayedItems : startIndex + ITEMS_PER_PAGE;
-  const currentBreeds = sortedBreeds.slice(0, endIndex);
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentBreeds = sortedBreeds.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage: number) => {
     if (species) {
@@ -104,46 +96,8 @@ export const CategoryGrid = () => {
     }
   };
 
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && displayedItems < sortedBreeds.length) {
-          setDisplayedItems(prev => prev + MOBILE_ITEMS_PER_LOAD);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [isMobile, displayedItems, sortedBreeds.length]);
-
-  const getPageTitle = () => {
-    if (!species) return 'Pet Breed Guides | PetVise';
-    return `${species.charAt(0).toUpperCase() + species.slice(1)} Breed Guide | PetVise`;
-  };
-
-  const getPageDescription = () => {
-    if (!species) return 'Explore comprehensive breed guides for various pets including dogs, cats, birds, and fish.';
-    return `Discover everything about ${species} breeds, including characteristics, care requirements, and compatibility.`;
-  };
-
   return (
     <div className="space-y-6">
-      <Helmet>
-        <title>{getPageTitle()}</title>
-        <meta name="description" content={getPageDescription()} />
-        <link 
-          rel="canonical" 
-          href={`https://petvise.ai/pet-breed-guides${species ? `/${species}` : ''}`} 
-        />
-      </Helmet>
-
       <CategoryFilters
         species={species}
         selectedSubCategories={selectedSubCategories}
@@ -152,30 +106,24 @@ export const CategoryGrid = () => {
         getSubCategories={getSubCategories}
       />
       
-      <div className={cn(
-        "grid gap-6",
-        isMobile ? "grid-cols-1" : "grid-cols-[200px_1fr]"
-      )}>
+      <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6">
         {!isMobile && species && getSubCategories().length > 0 && (
-          <aside className="space-y-4">
-            <h4 className="font-medium">Sub Categories</h4>
-            {getSubCategories().map((subCategory) => (
-              <div key={subCategory.id} className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleSubCategoryChange(subCategory.id)}
-                  className={cn(
-                    "w-full justify-start bg-[#f8fcfc]",
-                    selectedSubCategories.includes(subCategory.id) && "border-primary text-primary"
-                  )}
-                >
-                  {selectedSubCategories.includes(subCategory.id) && (
-                    <Check className="w-4 h-4 mr-2" />
-                  )}
-                  {subCategory.label}
-                </Button>
-              </div>
-            ))}
+          <aside>
+            <div className="space-y-4">
+              <h4 className="font-medium">Sub Categories</h4>
+              {getSubCategories().map((subCategory) => (
+                <div key={subCategory.id} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id={subCategory.id}
+                    checked={selectedSubCategories.includes(subCategory.id)}
+                    onChange={() => handleSubCategoryChange(subCategory.id)}
+                    className="rounded border-gray-300"
+                  />
+                  <label htmlFor={subCategory.id}>{subCategory.label}</label>
+                </div>
+              ))}
+            </div>
           </aside>
         )}
         
@@ -185,33 +133,19 @@ export const CategoryGrid = () => {
             onSortChange={(value: SortOption) => setSortOption(value)}
           />
 
-          <div className={cn(
-            isMobile 
-              ? "space-y-4" 
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          )}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {currentBreeds.map((breed) => (
-              <BreedCard key={breed.id} breed={breed} isMobile={isMobile} />
+              <BreedCard key={breed.id} breed={breed} />
             ))}
           </div>
 
-          {!isMobile && (
-            <div className="mt-8">
-              <CategoryPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
-          )}
-
-          {isMobile && displayedItems < sortedBreeds.length && (
-            <div ref={loadMoreRef} className="h-20" />
-          )}
+          <CategoryPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
-
-      <SeoContent content={petBreedGuidesData.seo_content} />
     </div>
   );
 };
