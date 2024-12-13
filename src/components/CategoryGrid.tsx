@@ -9,6 +9,9 @@ import { CategoryPagination } from './category/CategoryPagination';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { SeoContent } from './SeoContent';
+import { Helmet } from 'react-helmet';
+import petBreedGuidesData from '@/data/pet-breed-guides.json';
 import { dogBreeds, dogSubCategories } from '@/data/species/dogs';
 import { catBreeds, catSubCategories } from '@/data/species/cats';
 import { birdBreeds, birdSubCategories } from '@/data/species/birds';
@@ -120,8 +123,27 @@ export const CategoryGrid = () => {
     return () => observer.disconnect();
   }, [isMobile, displayedItems, sortedBreeds.length]);
 
+  const getPageTitle = () => {
+    if (!species) return 'Pet Breed Guides | PetVise';
+    return `${species.charAt(0).toUpperCase() + species.slice(1)} Breed Guide | PetVise`;
+  };
+
+  const getPageDescription = () => {
+    if (!species) return 'Explore comprehensive breed guides for various pets including dogs, cats, birds, and fish.';
+    return `Discover everything about ${species} breeds, including characteristics, care requirements, and compatibility.`;
+  };
+
   return (
     <div className="space-y-6">
+      <Helmet>
+        <title>{getPageTitle()}</title>
+        <meta name="description" content={getPageDescription()} />
+        <link 
+          rel="canonical" 
+          href={`https://petvise.ai/pet-breed-guides${species ? `/${species}` : ''}`} 
+        />
+      </Helmet>
+
       <CategoryFilters
         species={species}
         selectedSubCategories={selectedSubCategories}
@@ -143,7 +165,7 @@ export const CategoryGrid = () => {
                   variant="outline"
                   onClick={() => handleSubCategoryChange(subCategory.id)}
                   className={cn(
-                    "w-full justify-start",
+                    "w-full justify-start bg-[#f8fcfc]",
                     selectedSubCategories.includes(subCategory.id) && "border-primary text-primary"
                   )}
                 >
@@ -188,6 +210,8 @@ export const CategoryGrid = () => {
           )}
         </div>
       </div>
+
+      <SeoContent content={petBreedGuidesData.seo_content} />
     </div>
   );
 };
