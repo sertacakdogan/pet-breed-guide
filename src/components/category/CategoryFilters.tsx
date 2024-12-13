@@ -1,5 +1,8 @@
 import React from 'react';
+import { Check } from 'lucide-react';
 import { SpeciesFilter, type Species } from '../SpeciesFilter';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
 
 interface CategoryFiltersProps {
   species: string | undefined;
@@ -16,32 +19,36 @@ export const CategoryFilters = ({
   onSubCategoryChange,
   getSubCategories,
 }: CategoryFiltersProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        <SpeciesFilter
-          selectedSpecies={species as Species || null}
-          selectedSubCategories={selectedSubCategories}
-          onSpeciesSelect={onSpeciesSelect}
-          onSubCategoryChange={onSubCategoryChange}
-          availableSubCategories={getSubCategories()}
-        />
-      </div>
+      <SpeciesFilter
+        selectedSpecies={species as Species || null}
+        selectedSubCategories={selectedSubCategories}
+        onSpeciesSelect={onSpeciesSelect}
+        onSubCategoryChange={onSubCategoryChange}
+        availableSubCategories={getSubCategories()}
+      />
       
       {species && getSubCategories().length > 0 && (
-        <div className="space-y-4">
-          <h4 className="font-medium">Sub Categories</h4>
+        <div className={`${isMobile ? 'flex flex-wrap gap-2' : 'hidden'}`}>
           {getSubCategories().map((subCategory) => (
-            <div key={subCategory.id} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id={subCategory.id}
-                checked={selectedSubCategories.includes(subCategory.id)}
-                onChange={() => onSubCategoryChange(subCategory.id)}
-                className="rounded border-gray-300"
-              />
-              <label htmlFor={subCategory.id}>{subCategory.label}</label>
-            </div>
+            <Button
+              key={subCategory.id}
+              variant="outline"
+              onClick={() => onSubCategoryChange(subCategory.id)}
+              className={`rounded-full flex items-center gap-2 ${
+                selectedSubCategories.includes(subCategory.id)
+                  ? 'border-primary text-primary'
+                  : ''
+              }`}
+            >
+              {selectedSubCategories.includes(subCategory.id) && (
+                <Check className="w-4 h-4" />
+              )}
+              {subCategory.label}
+            </Button>
           ))}
         </div>
       )}

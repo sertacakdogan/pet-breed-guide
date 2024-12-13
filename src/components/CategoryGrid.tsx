@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Check } from 'lucide-react';
 import { type Species } from './SpeciesFilter';
 import { BreedCard } from './BreedCard';
 import { CategoryFilters } from './category/CategoryFilters';
 import { CategorySort, type SortOption } from './category/CategorySort';
 import { CategoryPagination } from './category/CategoryPagination';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { dogBreeds, dogSubCategories } from '@/data/species/dogs';
 import { catBreeds, catSubCategories } from '@/data/species/cats';
 import { birdBreeds, birdSubCategories } from '@/data/species/birds';
@@ -23,6 +25,7 @@ export const CategoryGrid = () => {
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>('default');
   const currentPage = parseInt(page, 10) || 1;
+  const isMobile = useIsMobile();
 
   const handleSpeciesSelect = (selectedSpecies: Species) => {
     setSelectedSubCategories([]);
@@ -103,9 +106,9 @@ export const CategoryGrid = () => {
         getSubCategories={getSubCategories}
       />
       
-      <div className="grid grid-cols-[200px_1fr] gap-6">
-        <aside>
-          {species && getSubCategories().length > 0 && (
+      <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6">
+        {!isMobile && species && getSubCategories().length > 0 && (
+          <aside>
             <div className="space-y-4">
               <h4 className="font-medium">Sub Categories</h4>
               {getSubCategories().map((subCategory) => (
@@ -121,8 +124,8 @@ export const CategoryGrid = () => {
                 </div>
               ))}
             </div>
-          )}
-        </aside>
+          </aside>
+        )}
         
         <div>
           <CategorySort
